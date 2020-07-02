@@ -10,8 +10,26 @@ jobs:
           name: Say Hello
           command: |
             echo "Hello World"
-
+  frontend:
+    docker: 
+      - image: circleci/node:12.18.2-alpine3.9
+    steps:
+      - checkout
+      - run:
+         name: Install latest npm
+         command: 'sudo npm install -g npm@latest'
+      - restore_cache:
+         key: dependency-cache-{{ checksum "package-lock.json"}}
+      - run:
+          name: Navigate to Frontend
+          command: 'cd ./frontend'
+      - run:
+          name: Install package
+          command: 'npm i'
 workflows:
   default:
     jobs:
       - hello-world
+  build_and_compile:
+    jobs:
+       - frontend
