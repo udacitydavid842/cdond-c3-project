@@ -41,14 +41,6 @@ jobs:
       - save_cache:
           paths: [backend/node_modules]
           key: backend-build
-workflows:
-  default:
-    jobs:
-      - hello-world
-  build_and_compile:
-  jobs:
-       - lint-frontend
-       - build-backend
   test-frontend:
     docker:
      - image: circleci/node:13.8.0
@@ -76,11 +68,12 @@ workflows:
 workflows:
   default:
     jobs:
-     - hello-world
+      - hello-world
+  build_and_compile:
+    jobs:
+        - lint-frontend
+        - build-backend
   test:
-     - build-backend
-  jobs:
-     - test-frontend
-     requires: lint-frontend
-     - test-backend
-     requires: build-backend
+    jobs:
+      - test-frontend
+      - test-backend
