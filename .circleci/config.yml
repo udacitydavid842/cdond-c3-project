@@ -20,9 +20,9 @@ jobs:
        - run:
           name: Lint frontend
           command: |
-          cd frontend
-          npm install
-          npm run build
+            cd frontend
+            npm install
+            npm run build
        - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
@@ -37,9 +37,9 @@ jobs:
       - run:
          name: Backend build
          command: |
-         cd backend
-         npm install
-         npm run build
+          cd backend
+          npm install
+          npm run build
       - save_cache:
           paths: [backend/node_modules]
           key: backend-build
