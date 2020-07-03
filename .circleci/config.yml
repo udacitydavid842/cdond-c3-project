@@ -10,7 +10,7 @@ jobs:
           command: |
             echo "Hello World"
   test-frontend:
-   docker:
+    docker:
      - image: circleci/node:13.8.0
     steps:
       - checkout
@@ -23,9 +23,9 @@ jobs:
          npm install
          npm run test
   test-backend:
-   docker:
+    docker:
      - image: circleci/node:13.8.0
-   steps:
+    steps:
      - checkout
      -restore_cache
        keys: [backend-build]
