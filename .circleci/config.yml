@@ -1,5 +1,4 @@
 version: 2.1
-
 jobs:
   hello-world:
     docker:
@@ -26,7 +25,6 @@ jobs:
        - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
-
   build-backend:
     docker:
      - image: circleci/12.18.2-alpine3.9
@@ -43,8 +41,7 @@ jobs:
       - save_cache:
           paths: [backend/node_modules]
           key: backend-build
-
- workflows:
+workflows:
   default:
     jobs:
       - hello-world
