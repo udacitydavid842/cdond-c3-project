@@ -11,7 +11,7 @@ jobs:
             echo "Hello World"
   lint-frontend:
      docker: 
-       - image: circleci/node:12.18.2-alpine3.9
+       - image: circleci/node:13.8.0
      steps:
        - checkout
        - restore_cache:
@@ -27,7 +27,7 @@ jobs:
           key: frontend-build
   build-backend:
     docker:
-     - image: circleci/12.18.2-alpine3.9
+     - image: circleci/node:13.8.0
     steps:
       - checkout
       - restore_cache:
