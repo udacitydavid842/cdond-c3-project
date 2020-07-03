@@ -78,4 +78,6 @@ workflows:
   test:
     jobs:
       - test-frontend
+        requires: [lint-frontend]
       - test-backend
+        requires: [build-backend]
