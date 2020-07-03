@@ -62,11 +62,11 @@ jobs:
       - restore_cache:
           keys: [backend-build]
       - run:
-        name: Run backend test
-        command: |
-          cd backend
-          npm install
-          npm run test
+          name: Run backend test
+          command: |
+            cd backend
+            npm install
+            npm run test
 workflows:
   default:
     jobs:
@@ -78,8 +78,4 @@ workflows:
   test:
     jobs:
       - test-frontend
-          requires: 
-            - lint-frontend
       - test-backend
-          requires: 
-            - build-backend
