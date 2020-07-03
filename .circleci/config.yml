@@ -80,6 +80,9 @@ workflows:
     jobs:
      - hello-world
   test:
+  requires:
+     - lint-frontend
+     - build-backend
     jobs:
      - test-frontend
      - test-backend
