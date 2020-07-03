@@ -11,10 +11,8 @@ jobs:
           command: |
             echo "Hello World"
   lint frontend:
-     environment:
-     code: 123
      docker: 
-       - image: circleci/node:13.8.0
+       - image: circleci/node:12.18.2-alpine3.9
      steps:
        - checkout
        - restore_cache:
@@ -23,7 +21,6 @@ jobs:
           name: Lint frontend
           command: |
           cd frontend
-          echo $CODE
           npm install
           npm run build
        - save_cache:
@@ -32,7 +29,7 @@ jobs:
 
   build-backend:
     docker:
-     - image: circleci/node:13.8.0
+     - image: circleci/12.18.2-alpine3.9
     steps:
       - checkout
       - restore_cache:
@@ -47,63 +44,7 @@ jobs:
           paths: [backend/node_modules]
           key: backend-build
 
- test-frontend:
-   docker:
-     - image: circleci/node:13.8.0
-    steps:
-      - checkout
-      - restore_cache
-         keys: [frontend-build]
-      - run:
-         name: Run frontend test
-         command: |
-         cd frontend
-         npm install
-         npm run test
-
- test-backend:
-   docker:
-     - image: circleci/node:13.8.0
-   steps:
-     - checkout
-     -restore_cache
-       keys: [backend-build]
-     - run:
-        name: Run backend test
-        command: |
-        cd backend
-        npm install
-        npm run test
-
- scan-frontend:
-   docker:
-      image: circleci/node:13.8.0
-   steps:
-     - checkout
-     - restore_cache:
-        keys: [frontend-build]
-     - run:
-        name: Scan frontend dependencies
-        command: |
-        cd frontend
-        npm install
-        npm audit --audit-level-critical
-
- scan-backend:
-   docker:
-      - image: circleci/node:13.8.0
-   steps:
-      - checkout
-      - restore_cache:
-          keys: [backend build]
-      - run:
-         name: Scan backened dependencies
-         command: |
-         cd backend
-         npm install
-         npm audit --audit-level=critical || true
-
-workflows:
+ workflows:
   default:
     jobs:
       - hello-world
@@ -111,14 +52,3 @@ workflows:
     jobs:
        - frontend
        - backend
-  test:
-      - frontend
-      requires: build-frontend
-      - backend
-      requires: build-backend
-  scan:
-      - frontend
-      requires: build-frontend
-      - backend
-      requires: build-backend
-    
