@@ -9,7 +9,7 @@ jobs:
           name: Say Hello
           command: |
             echo "Hello World"
-  lint frontend:
+  lint-frontend:
      docker: 
        - image: circleci/node:12.18.2-alpine3.9
      steps:
@@ -47,5 +47,5 @@ workflows:
       - hello-world
   build_and_compile:
     jobs:
-       - frontend
-       - backend
+       - lint-frontend
+       - build-backend
