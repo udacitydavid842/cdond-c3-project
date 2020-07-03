@@ -10,22 +10,99 @@ jobs:
           name: Say Hello
           command: |
             echo "Hello World"
-  frontend:
-    docker: 
-      - image: circleci/node:12.18.2-alpine3.9
+  lint frontend:
+     environment:
+     code: 123
+     docker: 
+       - image: circleci/node:13.8.0
+     steps:
+       - checkout
+       - restore_cache:
+          keys: [frontend-build]
+       - run:
+          name: Lint frontend
+          command: |
+          cd frontend
+          echo $CODE
+          npm install
+          npm run build
+       - save_cache:
+          paths: [frontend/node_modules]
+          key: frontend-build
+
+  build-backend:
+    docker:
+     - image: circleci/node:13.8.0
     steps:
       - checkout
-      - run:
-         name: Install latest npm
-         command: 'sudo npm install -g npm@latest'
       - restore_cache:
-         key: dependency-cache-{{ checksum "package-lock.json"}}
+          key: [backend-build]
       - run:
-          name: Navigate to Frontend
-          command: 'cd ./frontend'
+         name: Backend build
+         command: |
+         cd backend
+         npm install
+         npm run build
+      - save_cache:
+          paths: [backend/node_modules]
+          key: backend-build
+
+ test-frontend:
+   docker:
+     - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - restore_cache
+         keys: [frontend-build]
       - run:
-          name: Install package
-          command: 'npm i'
+         name: Run frontend test
+         command: |
+         cd frontend
+         npm install
+         npm run test
+
+ test-backend:
+   docker:
+     - image: circleci/node:13.8.0
+   steps:
+     - checkout
+     -restore_cache
+       keys: [backend-build]
+     - run:
+        name: Run backend test
+        command: |
+        cd backend
+        npm install
+        npm run test
+
+ scan-frontend:
+   docker:
+      image: circleci/node:13.8.0
+   steps:
+     - checkout
+     - restore_cache:
+        keys: [frontend-build]
+     - run:
+        name: Scan frontend dependencies
+        command: |
+        cd frontend
+        npm install
+        npm audit --audit-level-critical
+
+ scan-backend:
+   docker:
+      - image: circleci/node:13.8.0
+   steps:
+      - checkout
+      - restore_cache:
+          keys: [backend build]
+      - run:
+         name: Scan backened dependencies
+         command: |
+         cd backend
+         npm install
+         npm audit --audit-level=critical || true
+
 workflows:
   default:
     jobs:
@@ -33,3 +110,15 @@ workflows:
   build_and_compile:
     jobs:
        - frontend
+       - backend
+  test:
+      - frontend
+      requires: build-frontend
+      - backend
+      requires: build-backend
+  scan:
+      - frontend
+      requires: build-frontend
+      - backend
+      requires: build-backend
+    
