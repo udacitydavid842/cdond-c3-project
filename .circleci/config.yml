@@ -46,7 +46,7 @@ workflows:
     jobs:
       - hello-world
   build_and_compile:
-    jobs:
+  jobs:
        - lint-frontend
        - build-backend
   test-frontend:
@@ -79,7 +79,7 @@ workflows:
      - hello-world
   test:
      - build-backend
-    jobs:
+  jobs:
      - test-frontend
      requires: lint-frontend
      - test-backend
