@@ -54,35 +54,33 @@ workflows:
      - image: circleci/node:13.8.0
     steps:
       - checkout
-      - restore_cache
-        keys: [frontend-build]
+      - restore_cache:
       - run:
-         name: Run frontend test
-         command: |
-         cd frontend
-         npm install
-         npm run test
+          name: Run frontend test
+          command: |
+            cd frontend
+            npm install
+            npm run test
   test-backend:
     docker:
      - image: circleci/node:13.8.0
     steps:
      - checkout
-     -restore_cache
-       keys: [backend-build]
+     -restore_cache:
      - run:
         name: Run backend test
         command: |
-        cd backend
-        npm install
-        npm run test
+          cd backend
+          npm install
+          npm run test
 workflows:
   default:
     jobs:
      - hello-world
   test:
-  requires:
-     - lint-frontend
      - build-backend
     jobs:
      - test-frontend
+     requires: lint-frontend
      - test-backend
+     requires: build-backend
