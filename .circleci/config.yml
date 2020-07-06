@@ -102,7 +102,7 @@ workflows:
       - hello-world
   build_and_compile:
     jobs:
-        - lint-frontend
+        - build-frontend
         - build-backend
   test:
     jobs:
